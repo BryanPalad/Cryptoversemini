@@ -19,7 +19,12 @@ const Cryptocurrencies = ({simplified}) => {
       axios.get(`https://api.fastforex.io/fetch-one?from=USD&to=PHP&api_key=${process.env.REACT_APP_KEY_PHP}`).then((response) => {
         const phpValue = response.data.result.PHP;
         setPhpCurrency(phpValue);
-      })
+      }).catch(function (error) {
+        if (error.response) {
+          console.log('api does not work');
+          return <Loader/>
+        }
+      });
 
     const filteredData = cryptosList?.data?.coins.filter((coin) => coin.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
@@ -44,7 +49,7 @@ const Cryptocurrencies = ({simplified}) => {
       {!simplified && (
         <div className='search-crypto'>
           <Input className='input' placeholder='Search Cryptocurrency' onChange={(e) => setSearchTerm(e.target.value)}/>
-          <Switch className='switch' checkedChildren="USD" unCheckedChildren="PHP" defaultChecked onClick={() => handleSwitch()}/>
+          <Switch className='switch' checkedChildren="USD" unCheckedChildren="PHP" defaultChecked onClick={() => handleSwitch()} style={{display: 'none'}}/>
         </div>
          
       )}
